@@ -31,3 +31,27 @@ exports.findAll = () => {
       throw err;
     });
 }
+
+exports.findOne = (id) => {
+  let objectId;
+  try {
+    objectId = mongoose.Types.ObjectId(id);
+  } catch (err) {
+    throw err;
+  }
+  return Ingredient.findById(objectId)
+    .then((item) => {
+      if (item === null) {
+        throw new Error(`Item not found with id: ${id}`);
+      } else {
+        const cleanedItem = {
+          _id: item._id,
+          name: item.name,
+          type: item.type,
+        };
+        return cleanedItem;
+      }
+    }).catch((err) => {
+      throw err;
+    });
+}

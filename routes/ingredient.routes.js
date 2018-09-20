@@ -29,5 +29,21 @@ module.exports = (app) => {
         message: err.message || 'Some error occurred while retrieving items.',
       });
     }
+  });
+
+  app.get('/api/ingredients/:ingId', async(req,res) => {
+    const id = req.params.ingId;
+    try {
+      const ing = await ingredients.findOne(id);
+      if (ing._id) {
+        res.send(ing);
+      }
+    } catch (err) {
+      if (err.message === `Item not found with id: ${id}`) {
+        res.status(404).send(err);
+      } else {
+        res.status(500).send(err);
+      }
+    }
   })
 };
