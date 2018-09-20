@@ -21,4 +21,32 @@ module.exports = (app) => {
       }
     }
   });
+
+  app.get('/api/recipes', async(req,res) => {
+    try {
+      const list = await recipes.findAll();
+      res.send(list);
+    } catch (err) {
+      res.status(500).send({
+        message: err.message || 'Some error occurred while retrieving items.',
+      });
+    }
+  });
+
+  // get single recipe by id
+  app.get('/api/recipes/:rId', async(req,res) => {
+    const id = req.params.rId;
+    try {
+      const recipe = await recipes.findOne(id);
+      if (recipe._id) {
+        res.send(recipe);
+      }
+    } catch (err) {
+      if (err.message === `Item not found with id: ${id}`) {
+        res.status(404).send(err);
+      } else {
+        res.status(500).send(err);
+      }
+    }
+  });
 };
