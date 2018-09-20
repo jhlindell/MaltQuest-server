@@ -1,0 +1,25 @@
+{
+  "name": "maltquest-server",
+  "version": "0.1.0",
+  "description": "api-server",
+  "main": "server.js",
+  "author": "Jon Lindell",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhlindell/MaltQuest-server.git"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "faker": "^4.1.0",
+    "mongoose": "^5.2.16",
+    "mongoose-paginate-lazarus": "^5.0.7",
+    "nodemon": "^1.18.4"
+  }
+}
