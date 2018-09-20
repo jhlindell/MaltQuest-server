@@ -14,3 +14,20 @@ exports.create = (name, type) => {
       });
   }
 };
+
+exports.findAll = () => {
+  return Ingredient.find()
+    .then((response) => {
+      const cleanedResponse = response.map((item) => {
+        const cleanedItem = {
+          _id: item._id,
+          name: item.name,
+          type: item.type,
+        }
+        return cleanedItem;
+      });
+      return cleanedResponse;
+    }).catch((err) => {
+      throw err;
+    });
+}

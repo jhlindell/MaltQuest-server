@@ -19,5 +19,15 @@ module.exports = (app) => {
       }
     }
   });
-  
+
+  app.get('/api/ingredients', async(req, res) => {
+    try {
+      const list = await ingredients.findAll();
+      res.send(list);
+    } catch (err) {
+      res.status(500).send({
+        message: err.message || 'Some error occurred while retrieving items.',
+      });
+    }
+  })
 };
