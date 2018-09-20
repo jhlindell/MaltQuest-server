@@ -20,6 +20,7 @@ module.exports = (app) => {
     }
   });
 
+  // get all ingredients using page and limit for pagination. search is optional query parameter
   app.get('/api/ingredients', async(req, res) => {
     const page = Number(req.query.page);
     const limit = Number(req.query.limit);
@@ -34,6 +35,7 @@ module.exports = (app) => {
     }
   });
 
+  // get single ingredient by id
   app.get('/api/ingredients/:ingId', async(req,res) => {
     const id = req.params.ingId;
     try {
@@ -50,6 +52,7 @@ module.exports = (app) => {
     }
   });
 
+  // delete an ingredient by id
   app.delete('/api/ingredients/:ingId', async (req, res) => {
     const id = req.params.ingId;
     try {
@@ -74,6 +77,7 @@ module.exports = (app) => {
     }
   });
 
+  // update an ingredient
   app.put('/api/ingredients/:ingId', async(req, res) => {
     const { name, type } = req.body;
     const id = req.params.ingId;
