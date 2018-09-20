@@ -15,10 +15,20 @@ exports.create = (name, type) => {
   }
 };
 
-exports.findAll = () => {
-  return Ingredient.find()
+exports.findAll = (page, limit, search) => {
+  const query = {};
+  if (search !== undefined) {
+    query.name = { $regex: search, $options: 'i' };
+  }
+  const options = {
+    page,
+    limit,
+    sort: { name: 1 },
+  };
+  return Ingredient.paginate(query, options)
     .then((response) => {
-      const cleanedResponse = response.map((item) => {
+      const result = Object.assign(response);
+      const cleanedResponse = response.docs.map((item) => {
         const cleanedItem = {
           _id: item._id,
           name: item.name,
@@ -26,7 +36,8 @@ exports.findAll = () => {
         }
         return cleanedItem;
       });
-      return cleanedResponse;
+      result.docs = cleanedResponse
+      return result;
     }).catch((err) => {
       throw err;
     });
