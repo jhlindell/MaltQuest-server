@@ -45,5 +45,48 @@ module.exports = (app) => {
         res.status(500).send(err);
       }
     }
+  });
+
+  app.delete('/api/ingredients/:ingId', async (req, res) => {
+    const id = req.params.ingId;
+    try {
+      const item = await ingredients.delete(id);
+      if (item._id) {
+        res.send(item);
+      } else {
+        res.status(404).send({
+          message: `Item not found with id: ${id}`,
+        });
+      }
+    } catch (err) {
+      if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+        res.status(404).send({
+          message: `Item not found with id: ${id}`,
+        });
+      } else {
+        res.status(500).send({
+          message: `Could not delete item with id ${id}`,
+        });
+      }
+    }
+  });
+
+  app.put('/api/ingredients/:ingId', async(req, res) => {
+    const { name, type } = req.body;
+    const id = req.params.ingId;
+    try {
+      const item = await ingredients.update(name, type, id);
+      res.send(item);
+    } catch (err) {
+      if (err.kind === 'ObjectId' || err.message === `Item not found with id ${id}`) {
+        res.status(404).send({
+          message: `Item not found with id ${id}`,
+        });
+      } else {
+        res.status(500).send({
+          message: err.message,
+        });
+      }
+    }
   })
 };
