@@ -20,17 +20,17 @@ exports.create = (name, description, style, batchSize, instructions, ingredients
 exports.findAll = () => {
   return Recipe.find()
     .then((response) => {
-      const cleanedResult = response.map((item) => {
-        const cleanedItem = {
-          _id: item._id,
-          name: item.name,
-          description: item.description,
-          instructions: item.instructions,
-          ingredients: item.ingredients,
-          style: item.style,
-          batchSize: item.batchSize
+      const cleanedResult = response.map((recipe) => {
+        const cleanedRecipe = {
+          _id: recipe._id,
+          name: recipe.name,
+          description: recipe.description,
+          instructions: recipe.instructions,
+          ingredients: recipe.ingredients,
+          style: recipe.style,
+          batchSize: recipe.batchSize
         };
-        return cleanedItem;
+        return cleanedRecipe;
       });
       return cleanedResult;
     }).catch((err) => {
@@ -46,22 +46,41 @@ exports.findOne = (id) => {
     throw err;
   }
   return Recipe.findById(objectId)
-    .then((item) => {
-      if (item === null) {
+    .then((recipe) => {
+      if (recipe === null) {
         throw new Error(`Item not found with id: ${id}`);
       } else {
-        const cleanedItem = {
-          _id: item._id,
-          name: item.name,
-          description: item.description,
-          instructions: item.instructions,
-          ingredients: item.ingredients,
-          style: item.style,
-          batchSize: item.batchSize
+        const cleanedRecipe = {
+          _id: recipe._id,
+          name: recipe.name,
+          description: recipe.description,
+          instructions: recipe.instructions,
+          ingredients: recipe.ingredients,
+          style: recipe.style,
+          batchSize: recipe.batchSize
         };
-        return cleanedItem;
+        return cleanedRecipe;
       }
     }).catch((err) => {
+      throw err;
+    });
+};
+
+exports.delete = (id) => {
+  let objectId;
+  try {
+    objectId = mongoose.Types.ObjectId(id);
+  } catch (err) {
+    throw err;
+  }
+  return Recipe.findByIdAndRemove(objectId)
+    .then((recipe) => {
+      if (recipe) {
+        return recipe;
+      }
+      throw new Error(`Recipe not found with id: ${id}`);
+    })
+    .catch((err) => {
       throw err;
     });
 }

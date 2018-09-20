@@ -22,13 +22,14 @@ module.exports = (app) => {
     }
   });
 
+  //get all recipes
   app.get('/api/recipes', async(req,res) => {
     try {
       const list = await recipes.findAll();
       res.send(list);
     } catch (err) {
       res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving items.',
+        message: err.message || 'Some error occurred while retrieving recipes.',
       });
     }
   });
@@ -42,10 +43,40 @@ module.exports = (app) => {
         res.send(recipe);
       }
     } catch (err) {
-      if (err.message === `Item not found with id: ${id}`) {
-        res.status(404).send(err);
+      if (err.message === `Recipe not found with id: ${id}`) {
+        res.status(404).send({
+          message: err.message,
+        });
       } else {
-        res.status(500).send(err);
+        console.log(err);
+        res.status(500).send({
+          message: err.message || 'Some error occurred while retrieving recipes.',
+        });
+      }
+    }
+  });
+
+  // delete single recipe by id
+  app.delete('/api/recipes/:rId', async(req, res) => {
+    const id = req.params.rId;
+    try {
+      const recipe = await recipes.delete(id);
+      if (recipe._id) {
+        res.send(recipe);
+      } else {
+        res.status(404).send({
+          message: `Recipe not found with id: ${id}`,
+        });
+      }
+    } catch (err) {
+      if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+        res.status(404).send({
+          message: `Recipe not found with id: ${id}`,
+        });
+      } else {
+        res.status(500).send({
+          message: `Could not delete recipe with id ${id}`,
+        });
       }
     }
   });

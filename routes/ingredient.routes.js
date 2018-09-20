@@ -45,9 +45,13 @@ module.exports = (app) => {
       }
     } catch (err) {
       if (err.message === `Item not found with id: ${id}`) {
-        res.status(404).send(err);
+        res.status(404).send({
+          message: err.message,
+        });
       } else {
-        res.status(500).send(err);
+        res.status(500).send({
+          message: err.message,
+        });
       }
     }
   });
