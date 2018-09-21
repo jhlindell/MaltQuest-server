@@ -36,7 +36,7 @@ exports.findAll = (page, limit, search) => {
         }
         return cleanedItem;
       });
-      result.docs = cleanedResponse
+      result.docs = cleanedResponse;
       return result;
     }).catch((err) => {
       throw err;

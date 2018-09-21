@@ -24,8 +24,11 @@ module.exports = (app) => {
 
   //get all recipes
   app.get('/api/recipes', async(req,res) => {
+    const page = Number(req.query.page);
+    const limit = Number(req.query.limit);
+    const { search } = req.query;
     try {
-      const list = await recipes.findAll();
+      const list = await recipes.findAll(page, limit, search);
       res.send(list);
     } catch (err) {
       res.status(500).send({

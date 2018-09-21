@@ -17,10 +17,20 @@ exports.create = (name, description, style, batchSize, instructions, ingredients
   }
 };
 
-exports.findAll = () => {
-  return Recipe.find()
+exports.findAll = (page, limit, search) => {
+  const query = {};
+  if (search !== undefined) {
+    query.name = { $regex: search, $options: 'i' };
+  }
+  const options = {
+    page,
+    limit,
+    sort: { name: 1 },
+  };
+  return Recipe.paginate(query, options)
     .then((response) => {
-      const cleanedResult = response.map((recipe) => {
+      const result = Object.assign(response);
+      const cleanedResult = response.docs.map((recipe) => {
         const cleanedRecipe = {
           _id: recipe._id,
           name: recipe.name,
@@ -32,7 +42,8 @@ exports.findAll = () => {
         };
         return cleanedRecipe;
       });
-      return cleanedResult;
+      result.docs = cleanedResult;
+      return result;
     }).catch((err) => {
       throw err;
     });
