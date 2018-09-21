@@ -80,4 +80,26 @@ module.exports = (app) => {
       }
     }
   });
+
+  // update an ingredient
+  app.put('/api/recipes/:rId', async(req,res) => {
+    const {
+      name, description, style, batchSize, instructions, ingredients,
+    } = req.body;
+    const id = req.params.rId;
+    try {
+      const recipe = await recipes.update(name, description, style, batchSize, instructions, ingredients, id);
+      res.send(recipe);
+    } catch (err) {
+      if (err.kind === 'ObjectId' || err.message === `Recipe not found with id ${id}`) {
+        res.status(404).send({
+          message: `Recipe not found with id ${id}`,
+        });
+      } else {
+        res.status(500).send({
+          message: err.message,
+        });
+      }
+    }
+  });
 };

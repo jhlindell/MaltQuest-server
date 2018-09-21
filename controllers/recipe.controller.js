@@ -84,3 +84,31 @@ exports.delete = (id) => {
       throw err;
     });
 }
+
+exports.update = (name, description, style, batchSize, instructions, ingredients, id) => {
+  let objectId;
+  try {
+    objectId = mongoose.Types.ObjectId(id);
+  } catch (err) {
+    throw err;
+  }
+  const newRecipe = new Recipe({
+    name, description, style, batchSize, instructions, ingredients,
+  });
+  const error = newRecipe.validateSync();
+  if (error) {
+    throw error;
+  } else {
+    return Recipe.findByIdAndUpdate(
+      objectId,
+      { name, description, style, batchSize, instructions, ingredients }, { new: true },
+    ).then((recipe) => {
+      if (recipe) {
+        return recipe;
+      }
+      throw new Error(`Item not found with id: ${id}`);
+    }).catch((err) => {
+      throw err;
+    });
+  }
+}
