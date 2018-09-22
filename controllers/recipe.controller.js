@@ -18,9 +18,14 @@ exports.create = (name, description, style, batchSize, instructions, ingredients
 };
 
 exports.findAll = (page, limit, search) => {
-  const query = {};
+  let query = {};
   if (search !== undefined) {
-    query.name = { $regex: search, $options: 'i' };
+    query = {
+      $or: [
+        {name: { $regex: search, $options: 'i' }},
+        {type: { $regex: search, $options: 'i' }}
+      ]
+    }
   }
   const options = {
     page,
