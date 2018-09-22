@@ -51,7 +51,6 @@ module.exports = (app) => {
           message: err.message,
         });
       } else {
-        console.log(err);
         res.status(500).send({
           message: err.message || 'Some error occurred while retrieving recipes.',
         });
